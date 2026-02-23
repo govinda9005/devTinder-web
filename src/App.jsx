@@ -1,7 +1,7 @@
 function App() {
   return (
     <>
-      <h1>Hellow world</h1>
+      <h1>I Love You</h1>
     </>
   );
 }
