@@ -1,14 +1,39 @@
+import axios from "axios";
 import React from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { API_BASE_URL } from "../utils/constants";
+import { useDispatch } from "react-redux";
+import { removeUser } from "../utils/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const user = useSelector((store) => store.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      // Make an API call to logout the user (e.g., clear session on the server)
+      await axios(`${API_BASE_URL}/logout`, {
+        method: "POST",
+        withCredentials: true, // Important for sending cookies
+      });
+      // Implement logout logic here (e.g., clear user data, redirect to login)
+      dispatch(removeUser());
+      return navigate("/login"); // Redirect to login page after logout
+    } catch (error) {
+      console.error("Failed to logout:", error);
+    }
+  };
 
   return (
     <div className="navbar bg-base-300 shadow-sm px-4">
       {/* Left */}
       <div className="flex-1">
-        <a className="btn btn-ghost text-xl">DevTinder</a>
+        <Link to="/" className="btn btn-ghost text-xl">
+          DevTinder
+        </Link>
       </div>
 
       {/* Right */}
@@ -39,15 +64,18 @@ const NavBar = () => {
                 </div>
               </div>
 
-              <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box mt-3 w-52 p-2 shadow z-10">
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content bg-base-100 rounded-box mt-3 w-52 p-2 shadow z-10"
+              >
                 <li>
-                  <a>Profile</a>
+                  <Link to="/profile">Profile</Link> {/* ✅ FIXED */}
                 </li>
                 <li>
                   <a>Settings</a>
                 </li>
                 <li>
-                  <a>Logout</a>
+                  <a onClick={handleLogout}>Logout</a>
                 </li>
               </ul>
             </div>
