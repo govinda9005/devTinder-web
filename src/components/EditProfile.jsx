@@ -16,14 +16,8 @@ const EditProfile = ({ user }) => {
   const [gender, setGender] = useState(user?.gender || "");
   const [about, setAbout] = useState(user?.about || "");
 
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
-
   const handleSave = async () => {
     try {
-      setLoading(true);
-      setMessage("");
-
       const response = await axios.patch(
         `${API_BASE_URL}/profile/edit`,
         {
@@ -38,115 +32,115 @@ const EditProfile = ({ user }) => {
       );
 
       dispatch(addUser(response?.data?.data));
+
       setShowToast(true);
       setTimeout(() => setShowToast(false), 3000);
-
     } catch (error) {
       console.error(error.response?.data || error.message);
-      setMessage(error.response?.data?.message || "Failed to update profile");
-    } finally {
-      setLoading(false);
     }
   };
 
- return (
-  <>
-  <div className="min-h-screen bg-base-200 flex justify-center items-center px-4">
-    
-    <div className="flex flex-col lg:flex-row items-stretch gap-6 w-full max-w-4xl">
+  return (
+    <>
+      {/* CENTER PAGE */}
+      <div className="min-h-screen bg-base-200 flex items-center justify-center">
 
-      {/* FORM */}
-      <div className="card w-full max-w-sm bg-base-100 shadow-xl h-[550px]">
-        <div className="card-body flex flex-col justify-between overflow-y-auto">
+        {/* MAIN CONTAINER */}
+        <div className="flex gap-10">
 
-          <div>
-            <h2 className="text-xl text-center mb-2 font-semibold">
-              Edit Profile
-            </h2>
+          {/* FORM */}
+          <div className="card w-96 bg-base-100 shadow-xl">
+            <div className="card-body">
 
-            <input
-              type="text"
-              placeholder="First Name"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              className="input input-bordered w-full mb-2"
-            />
+              <h2 className="text-xl font-bold text-center mb-2">
+                Edit Profile
+              </h2>
 
-            <input
-              type="text"
-              placeholder="Last Name"
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-              className="input input-bordered w-full mb-2"
-            />
+              <input
+                type="text"
+                placeholder="First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="input input-bordered w-full"
+              />
 
-            <input
-              type="text"
-              placeholder="Photo URL"
-              value={photoUrl}
-              onChange={(e) => setPhotoUrl(e.target.value)}
-              className="input input-bordered w-full mb-2"
-            />
+              <input
+                type="text"
+                placeholder="Last Name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="input input-bordered w-full"
+              />
 
-            {photoUrl && (
-              <div className="flex justify-center mb-2">
-                <img
-                  src={photoUrl}
-                  className="w-14 h-14 rounded-full object-cover"
-                />
-              </div>
-            )}
+              <input
+                type="text"
+                placeholder="Photo URL"
+                value={photoUrl}
+                onChange={(e) => setPhotoUrl(e.target.value)}
+                className="input input-bordered w-full"
+              />
 
-            <input
-              type="number"
-              placeholder="Age"
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-              className="input input-bordered w-full mb-2"
-            />
+              {photoUrl && (
+                <div className="flex justify-center">
+                  <img
+                    src={photoUrl}
+                    className="w-16 h-16 rounded-full object-cover border"
+                  />
+                </div>
+              )}
 
-            <select
-              value={gender}
-              onChange={(e) => setGender(e.target.value)}
-              className="select select-bordered w-full mb-2"
-            >
-              <option value="">Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
+              <input
+                type="number"
+                placeholder="Age"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                className="input input-bordered w-full"
+              />
 
-            <textarea
-              placeholder="About"
-              value={about}
-              onChange={(e) => setAbout(e.target.value)}
-              className="textarea textarea-bordered w-full"
-            />
+              <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                className="select select-bordered w-full"
+              >
+                <option value="">Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+
+              <textarea
+                placeholder="About"
+                value={about}
+                onChange={(e) => setAbout(e.target.value)}
+                className="textarea textarea-bordered w-full"
+              />
+
+              <button
+                onClick={handleSave}
+                className="btn btn-primary w-full mt-2"
+              >
+                Save Profile
+              </button>
+
+            </div>
           </div>
 
-          <button
-            onClick={handleSave}
-            className="btn btn-primary mt-3"
-          >
-            Save Profile
-          </button>
+          {/* PROFILE PREVIEW */}
+          <UserrCard
+            user={{ firstName, lastName, photoUrl, age, gender, about }}
+          />
+
         </div>
       </div>
 
-      {/* PREVIEW */}
-      <UserrCard
-        user={{ firstName, lastName, photoUrl, age, gender, about }}
-      />
-
-    </div>
-  </div>
-
-  {showToast && (<div className="toast toast-top toast-center">
-  <div className="alert alert-info">
-    <span>Profile updated successfully!</span>
-  </div>
-</div>)}
-  </>
-);
+      {showToast && (
+        <div className="toast toast-top toast-center">
+          <div className="alert alert-success">
+            <span>Profile updated successfully!</span>
+          </div>
+        </div>
+      )}
+    </>
+  );
 };
 
 export default EditProfile;
