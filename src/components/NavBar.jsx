@@ -76,6 +76,9 @@ const NavBar = () => {
                   
                 </li>
                 <li>
+                  <Link to="/requests">Requests</Link> {/* ✅ FIXED */}
+                </li>
+                <li>
                   <a onClick={handleLogout}>Logout</a>
                 </li>
               </ul>
